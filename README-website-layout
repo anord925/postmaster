@@ -1,0 +1,31 @@
+Site -----+
+	  |
+	  +-----> one.css
+	  |
+	  +-----> posts-by-date.txt
+	  |
+	  +-----> home.html
+	  |
+	  +-----> catalog.html
+	  |
+	  +-----> publications.html
+	  |
+	  +-----> about.html
+	  |
+	  +-----> images -----+
+	  |                   |
+	  |                   +-----{ image files }
+	  |
+	  |
+	  +-----> research -----+
+	  |                     |
+	  |                     +-----> catalog.html
+	  |                     |
+	  |                     +-----{ posts! }
+	  |
+	  |
+	  +-----> play -----+
+                            |
+		  	    +-----> catalog.html
+		  	    |
+		  	    +-----{ posts! }

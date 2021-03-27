@@ -1,0 +1,38 @@
+
+File Elements:
+
++ Any PLAIN TEXT will be written as paragraph text.
+  Empty lines will demarcate paragraph breaks.
+
++ A TITLE is NECESSARY, and is whatever's on the first line.
+
++ A CATEGORY is ALSO NECESSARY, and is whatever's on the
+  second line (currently this has to be either 'research'
+  or 'play').
+
++ IMAGES can be added with the following html-like code:
+
+      <img ~/yadda/yadda/blah>
+
+  A local copy will be produced for the actual site.
+  I'd recommend absolute pathing just because this
+  isn't going to be pro-grade software (sorry).
+
+  Resizing is automatic, so don't sweat your disgusting
+  little head about it.
+
+  Images can't be embedded inside paragraphs because
+  that would be the worst thing your eyes ever did
+  experience.
+
++ Link text the way you want it in the html, you big
+  crybaby.  Something like this, perhaps?
+
+      <a href="http://www.piss.jizz">CUM TIME</a>
+
++ Text can become italicized by surrounding it with
+  asterisks.  If a period is seen before the downstream
+  asterisk, fugged aboud it (so you can still have
+  character '*').
+
+
