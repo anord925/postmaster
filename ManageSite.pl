@@ -247,7 +247,7 @@ sub PublishSite
     }
 
     # We're ready to push off!
-    RunSystemCommand("git commit");
+    system("git commit");
     system("git push origin main");
 
     # The very last thing we'll do is delete the file recording nixxed posts,

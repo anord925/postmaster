@@ -174,7 +174,29 @@ li a:hover {
     color: gray;
     padding: 0 0 10px 0;
 }
+.catalogEntryDesc {
+    font-size: 15px;
+    padding: 10px 0;
+}
 
+
+
+/* ABOUT
+ *
+ * As a grade-A narcissist, it's critical that I talk about
+ * myself as much as possible.  Thanks to this CSS, I'm able
+ * to make that slightly less painful for my audience by
+ * having my self-agrandizement somewhat aesthetically formatted.
+ *
+ */
+.aboutMe {
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    position: absolute;
+    top: 0;
+    margin: 14vh 30vw 0 2vw;
+    padding: 0 0 60px 0;
+}
 
 
 

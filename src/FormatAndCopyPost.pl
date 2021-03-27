@@ -33,8 +33,7 @@ sub CreateDirectory;
 #          #
 ############
 
-my $max_img_width = 1000.0;
-
+my $max_img_width = 600.0;
 
 if (@ARGV != 1) { die "\n  USAGE: ./FormatAndCopyPost.pl [rippable-file]\n\n"; }
 
@@ -109,7 +108,6 @@ for (my $paragraph_id=0; $paragraph_id<$num_paragraphs; $paragraph_id++) {
 	# Break it into sentences and look for paired asterisks.
 	# We have to do this in an obnoxiously careful way.
 	my @Sentences;
-	my @Punctuation;
 	my $in_link = 0;
 	my $next_sentence = '';
 	my @ParagraphChars = split(//,$paragraph);
@@ -136,18 +134,10 @@ for (my $paragraph_id=0; $paragraph_id<$num_paragraphs; $paragraph_id++) {
 	    }
 
 
+	    $next_sentence = $next_sentence.$char;
 	    if ($end_of_sentence) {
 		push(@Sentences,$next_sentence);
-		push(@Punctuation,$char);
 		$next_sentence = '';
-	    } else {
-		$next_sentence = $next_sentence.$char;
-	    }
-
-	    # Just in case I get sloppy and forget terminal punctuation...
-	    if ($char_id+1 == scalar(@ParagraphChars) && !$end_of_sentence) {
-		push(@Sentences,$next_sentence);
-		push(@Punctuation,'.');
 	    }
 
 	}
@@ -162,9 +152,17 @@ for (my $paragraph_id=0; $paragraph_id<$num_paragraphs; $paragraph_id++) {
 
 	    if ($sentence =~ /\*/) {
 
+		# Identify and remove terminal punctuation
+		my $end_punctuation = '';
+		if ($sentence =~ /([^\*A-Za-z]+)$/) {
+		    $end_punctuation = $1;
+		    $sentence =~ s/$end_punctuation$//;
+		}
+		
 		# ASTERISK ALERT! ASTERISK ALERT!
 		my @Fragments = split(/\*/,$sentence);
 		my $num_fragments = scalar(@Fragments);
+
 
 		# If there's only one asterisk, this was a false-flag operation!
 		if ($sentence =~ /^\*/ && $sentence =~ /\*$/) {
@@ -202,11 +200,13 @@ for (my $paragraph_id=0; $paragraph_id<$num_paragraphs; $paragraph_id++) {
 		    
 		}
 
+		# Don't forget your punctuation!
+		$sentence = $sentence.$end_punctuation;
 
 	    }
 	    
-	    if (!($sentence_id+1 == $num_sentences && !$sentence)) {
-		$paragraph = $paragraph.$sentence.$Punctuation[$sentence_id];
+	    unless ($sentence_id+1 == $num_sentences && !$sentence) {
+		$paragraph = $paragraph.$sentence;
 		$paragraph = $paragraph.' ' if ($sentence_id+1 < $num_sentences);
 	    }
 	    
@@ -219,7 +219,10 @@ for (my $paragraph_id=0; $paragraph_id<$num_paragraphs; $paragraph_id++) {
 
 	# We'll want to convert the local image location to an absolute location
 	my $abs_img_location = $local_img_location;
-	if ($local_img_location !~ /^\~|^\//) {
+	if ($local_img_location =~ /^\~/) {
+	    $abs_img_location =~ s/^\~\///;
+	    $abs_img_location = '/Users/alexandernord/'.$abs_img_location;
+	} elsif ($local_img_location !~ /^\//) {
 	    $abs_img_location = $rip_loc.$local_img_location;
 	}
 
@@ -267,12 +270,13 @@ for (my $paragraph_id=0; $paragraph_id<$num_paragraphs; $paragraph_id++) {
 	    
 	    my $resize_scale = $max_img_width/($img_width+0.0);
 	    my $resize_height = int((0.0+$img_height)*$resize_scale);
-	    $style_str = $style_str.' style="width:'.$max_img_width.'px;height:'.$resize_height.'px;';
+	    $style_str = $style_str.' style="width:'.$max_img_width.'px;height:'.$resize_height.'px;"';
 
 	}
 
 	# And now you're html!
-	$paragraph = '<img '.$style_str.' src="../images/'.$raw_img_name.'">';
+	$raw_img_name = '../images/'.$raw_img_name;
+	$paragraph = '<a href="'.$raw_img_name.'"><img '.$style_str.' src="'.$raw_img_name.'"></a>';
 
     } else {
 

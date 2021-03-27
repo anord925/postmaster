@@ -4,7 +4,7 @@ Site -----+
 	  |
 	  +-----> posts-by-date.txt
 	  |
-	  +-----> home.html
+	  +-----> index.html
 	  |
 	  +-----> catalog.html
 	  |
@@ -29,3 +29,4 @@ Site -----+
 		  	    +-----> catalog.html
 		  	    |
 		  	    +-----{ posts! }
+
