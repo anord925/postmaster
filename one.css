@@ -54,7 +54,7 @@ li a:hover {
     top: 0;
     left: 0;
     font-size: 20px;
-    padding: 0 0 0 2vw;
+    padding: 0 0 0 25px;
     width: 100vw;
     z-index: 2;
 }
