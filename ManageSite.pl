@@ -104,8 +104,8 @@ sub AddPost
     }
 
     RunSystemCommand('./src/FormatAndCopyPost.pl '.$fname);
-    RunSystemCommand('./src/UpdateCatalogs.pl');
-    RunSystemCommand('./src/UpdateNavBars.pl');
+    RunSystemCommand('./src/UpdateInternalLinks.pl');
+
 }
 
 
@@ -154,8 +154,7 @@ sub RemovePost
     }
     
     # Update our catalogs and nav bars
-    RunSystemCommand('./src/UpdateCatalogs.pl');
-    RunSystemCommand('./src/UpdateNavBars.pl');
+    RunSystemCommand('./src/UpdateInternalLinks.pl');
     
     # Add this to our list of removed posts
     my $outf;
@@ -227,8 +226,7 @@ sub PublishSite
     }
 
     # We'll want to guarantee that our catalogs and nav bars are up to snuff
-    RunSystemCommand('./src/UpdateCatalogs.pl');
-    RunSystemCommand('./src/UpdateNavBars.pl');
+    RunSystemCommand('./src/UpdateInternalLinks.pl');
 
     # Let's navigate our way over to the site directory
     chdir '../Site/';
