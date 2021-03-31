@@ -96,10 +96,11 @@ sub WriteCatalog
     # If we're in a subdirectory, add the catalog title. Otherwise, let
     # 'em know we're laying all our cards on the table!
     print $outf '<div class="catalogTitle">'."\n";
-    print $outf '<a href="catalog.html"><h2>';
-    if ($topic) { print $outf "$topic";  }
-    else        { print $outf 'Library'; }
-    print $outf '</h2></a>'."\n";
+    if ($topic) {
+	print $outf '<a href="index.html"><h2>'.$topic.'</h2></a>'."\n";
+    } else {
+	print $outf '<a href="library.html"><h2>Library</h2></a>'."\n";
+    }
     print $outf '</div>'."\n\n";
 
     # Movin' into the body!
@@ -176,8 +177,10 @@ sub WriteCatalog
     my $target_fname = $site_dirname;
     if ($topic) {
 	$target_fname = ConfirmDirectory($target_fname.$topic.'/');
+	$target_fname = $target_fname.'index.html';
+    } else {
+	$target_fname = $target_fname.'library.html';
     }
-    $target_fname = $target_fname.'catalog.html';
 
     RunSystemCommand("mv $tmpfname $target_fname");
     

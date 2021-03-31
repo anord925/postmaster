@@ -6,7 +6,7 @@ Site -----+
 	  |
 	  +-----> index.html
 	  |
-	  +-----> catalog.html
+	  +-----> library.html
 	  |
 	  +-----> publications.html
 	  |
@@ -19,14 +19,14 @@ Site -----+
 	  |
 	  +-----> research -----+
 	  |                     |
-	  |                     +-----> catalog.html
+	  |                     +-----> index.html
 	  |                     |
 	  |                     +-----{ posts! }
 	  |
 	  |
 	  +-----> play -----+
                             |
-		  	    +-----> catalog.html
+		  	    +-----> index.html
 		  	    |
 		  	    +-----{ posts! }
 

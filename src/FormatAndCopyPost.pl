@@ -331,7 +331,7 @@ my $formatted_cat = $category;
 $formatted_cat =~ s/^\S/$cat_first_char/;
 
 print $outf '<div class="catalogTitle">'."\n";
-print $outf '<a href="catalog.html"><h2>'.$formatted_cat.'</h2></a>'."\n";
+print $outf '<a href="index.html"><h2>'.$formatted_cat.'</h2></a>'."\n";
 print $outf '</div>'."\n";
 
 # Write in the title for this article

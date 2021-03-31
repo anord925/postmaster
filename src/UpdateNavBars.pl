@@ -145,7 +145,7 @@ sub TraverseSite
     # WRITE NAV BAR HTML
     my $nb = '<div class="rightNav">'."\n";
     $nb = $nb.'<ul>'."\n";
-    $nb = $nb.'<li class="navTopic"><a href="'.$research_path.'catalog.html">Research Blog</a></li>'."\n";
+    $nb = $nb.'<li class="navTopic"><a href="'.$research_path.'index.html">Research Blog</a></li>'."\n";
     $nb = $nb.'<ul>'."\n";
     for (my $i=0; $i<$num_recent; $i++) {
 	my $next_entry = '<li class="navSubTopic"><a href="';
@@ -155,7 +155,7 @@ sub TraverseSite
     }
     $nb = $nb.'</ul>'."\n";
     $nb = $nb.'<li class="navTopic"><a href="'.$home_path.'publications.html">Publications</a></li>'."\n";
-    $nb = $nb.'<li class="navTopic"><a href="'.$play_path.'catalog.html">Other Stuff</a></li>'."\n";
+    $nb = $nb.'<li class="navTopic"><a href="'.$play_path.'index.html">Other Stuff</a></li>'."\n";
     $nb = $nb.'<li class="navTopic"><a href="'.$home_path.'about.html">About</a></li>'."\n";
     $nb = $nb.'</ul>'."\n";
     $nb = $nb.'</div>'."\n";
