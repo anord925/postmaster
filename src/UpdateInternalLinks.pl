@@ -3,10 +3,12 @@ use warnings;
 use strict;
 use POSIX;
 
+
 #  FUNCTIONAL SUBROUTINES
 #
 sub WriteCatalog;
 sub ExtractDateFromFname;
+sub TraverseSite;
 
 
 #  BEUREAUCRATIC SUBROUTINES
@@ -35,25 +37,57 @@ sub CreateDirectory;
 
 
 my $location = $0;
-$location =~ s/UpdateCatalogs\.pl//;
+$location =~ s/UpdateInternalLinks\.pl//;
 
 my $site_dirname = ConfirmDirectory($location.'../../Site');
 
 # Kick things off by reading in all of our posts
 my $pbd = OpenInputFile($site_dirname.'posts-by-date.txt');
 my @Posts;
+my @ResearchFnames;
+my @ResearchTitles;
+my $num_recent = 0;
 while (my $line = <$pbd>) {
     $line =~ s/\n|\r//g;
-    if ($line) {
+    $line =~ s/\n|\r//g;
+    if ($line =~ /^(\S+)\s+\<([^\>]+)\>/) {
+
 	push(@Posts,$line);
+
+	my $fname = $1;
+	my $title = $2;
+
+	$fname =~ /^([^\/]+)\//;
+	my $category = $1;
+
+	if ($category eq 'research') {
+	    $fname =~ s/^research\///;
+	    push(@ResearchFnames,$fname);
+	    push(@ResearchTitles,$title);
+	    $num_recent++;
+	    last if ($num_recent==4);
+	}
+
     }
 }
 close($pbd);
+
+# We're going to have a temporary html file that we can just write to
+# and burn repeatedly.
+my $tmpfilename = NameOutputFile('update-burner.html');
 
 # And now we can write our catalogs!
 WriteCatalog('');
 WriteCatalog('Research');
 WriteCatalog('Play');
+
+# Now it's time for busy work -- traverse through our whole mirror directory
+# and update every html file that has a '<div class="rightNav"' line.
+TraverseSite($site_dirname,0,0,0);
+
+# Destroy our burner file
+RunSystemCommand("rm $tmpfilename") if (-e $tmpfilename);
+
 
 
 1;  ##   END OF SCRIPT   ##
@@ -84,8 +118,7 @@ sub WriteCatalog
     if ($topic) { $headerfname = $headerfname.'subdir-catalog-header.html'; }
     else        { $headerfname = $headerfname.'home-catalog-header.html';   }
     
-    my $tmpfname = 'tmp-catalog.html';    
-    open(my $outf,'>',$tmpfname) || die "\n  ERROR:  Failed to open '$tmpfname'\n\n";
+    open(my $outf,'>',$tmpfilename) || die "\n  ERROR:  Failed to open '$tmpfilename'\n\n";
 
     # Copy our header file into our temporary file
     my $inf = OpenInputFile($headerfname);
@@ -182,7 +215,7 @@ sub WriteCatalog
 	$target_fname = $target_fname.'library.html';
     }
 
-    RunSystemCommand("mv $tmpfname $target_fname");
+    RunSystemCommand("mv $tmpfilename $target_fname");
     
 }
 
@@ -223,6 +256,127 @@ sub ExtractDateFromFname
 }
 
 
+
+
+
+#################################################################
+#
+#  FUNCTION:  TraverseSite
+#
+sub TraverseSite
+{
+    my $dirname = shift;
+    my $depth = shift;
+    my $depth_into_research = shift;
+    my $depth_into_play = shift;
+
+    # We'll kick things off by coming up with the paths we'll need
+    # to get to each of the directories named in the navbar, going
+    # entirely off depth.
+    my $home_path = '';
+    for (my $i=0; $i<$depth; $i++) {
+	$home_path = '../'.$home_path;
+    }
+    
+    my $research_path = '';
+    if (!$depth_into_research) {
+	$research_path = $home_path.'research/';
+    } else {
+	for (my $i=1; $i<$depth_into_research; $i++) {
+	    $research_path = '../'.$research_path;
+	}
+    }
+
+    my $play_path = '';
+    if (!$depth_into_play) {
+	$play_path = $home_path.'play/';
+    } else {
+	for (my $i=1; $i<$depth_into_play; $i++) {
+	    $play_path = '../'.$play_path;
+	}
+    }
+
+    # WRITE NAV BAR HTML
+    my $nb = '<div class="rightNav">'."\n";
+    $nb = $nb.'<ul>'."\n";
+    $nb = $nb.'<li class="navTopic"><a href="'.$research_path.'index.html">Research Blog</a></li>'."\n";
+    $nb = $nb.'<ul>'."\n";
+    for (my $i=0; $i<$num_recent; $i++) {
+	my $next_entry = '<li class="navSubTopic"><a href="';
+	$next_entry = $next_entry.$research_path.$ResearchFnames[$i].'">';
+	$next_entry = $next_entry.$ResearchTitles[$i].'</a></li>';
+	$nb = $nb.$next_entry."\n";
+    }
+    $nb = $nb.'</ul>'."\n";
+    $nb = $nb.'<li class="navTopic"><a href="'.$home_path.'publications.html">Publications</a></li>'."\n";
+    $nb = $nb.'<li class="navTopic"><a href="'.$play_path.'index.html">Other Stuff</a></li>'."\n";
+    $nb = $nb.'<li class="navTopic"><a href="'.$home_path.'about.html">About</a></li>'."\n";
+    $nb = $nb.'</ul>'."\n";
+    $nb = $nb.'</div>'."\n";
+
+    # That's some gorgeous html!  Let's inject it into some files!
+    # We'll also need to run through each of our sub-directories, doing the
+    # same dang updating, so let's do everything at the same time!
+    # Be on the lookout for 'play' and 'research!'
+    my $dir = OpenDirectory($dirname);
+    while (my $dir_item = readdir($dir)) {
+
+	next if ($dir_item =~ /^\./);
+	$dir_item =~ s/\/$//;
+
+	my $full_name = $dirname.$dir_item;
+	if (-d $full_name) {
+
+	    $full_name = $full_name.'/';
+
+	    if ($dir_item eq 'research' || $depth_into_research) {
+		TraverseSite($full_name,$depth+1,$depth_into_research+1,0);
+	    } elsif ($dir_item eq 'play' || $depth_into_play) {
+		TraverseSite($full_name,$depth+1,0,$depth_into_play+1);
+	    } else {
+		TraverseSite($full_name,$depth+1,0,0);
+	    }
+	    
+	} elsif ($dir_item =~ /\.html$/) {
+
+	    my $grep = OpenSystemCommand("grep '<div class=\"rightNav' $full_name");
+	    my $grepcheck = <$grep>;
+	    close($grep);
+
+	    $grepcheck =~ s/\n|\r//g if ($grepcheck);
+	    next if (!$grepcheck);
+
+	    # Look alive! We got a file to update, folks!
+	    my $inf = OpenInputFile($full_name);
+	    open(my $outf,'>',$tmpfilename) || die "\n  ERROR:  Failed to open temporary output file '$tmpfilename'\n\n";
+	    while (my $line = <$inf>) {
+		if ($line =~ /\<div class\=\"rightNav/) {
+		    print $outf "$nb";
+		    my $divcount = 1;
+		    while ($divcount) {
+			$line = <$inf>;
+			$divcount-- if ($line =~ /\<\/div/);
+			$divcount++ if ($line =~ /\<div/);
+		    }
+		} else {
+		    print $outf "$line";
+		}
+	    }
+	    close($outf);
+	    close($inf);
+
+	    # Now we just need to do the ol' switcharoo
+	    RunSystemCommand("mv $tmpfilename $full_name");
+	    
+	    #print "  updated $full_name\n";
+	    
+	}
+	
+
+    }
+    closedir($dir);
+
+}
 
 
 
