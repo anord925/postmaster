@@ -233,8 +233,8 @@ sub PublishSite
 
     # If there's anything to remove, make sure that gets 'git rm'-ed
     foreach my $file_to_remove (@FilesToRemove) {
-	RunSystemCommand("git rm $file_to_remove");
-	RunSystemCommand("rm $file_to_remove") if (-e $file_to_remove);
+	RunSystemCommand("git rm -f $file_to_remove");
+	RunSystemCommand("rm -rf $file_to_remove") if (-e $file_to_remove);
     }
 
     # Get a list of every file, and ADD THEM ALL
@@ -252,7 +252,7 @@ sub PublishSite
     # since they're no longer relevant!
     # (take note that we've moved into 'Site')
     if (scalar(@FilesToRemove)) {
-	RunSystemCommand("rm ../postmaster/src/$nixxed_fname");
+	RunSystemCommand("rm ../postmaster/$nixxed_fname");
     }
     
 }
