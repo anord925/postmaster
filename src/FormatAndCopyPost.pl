@@ -169,7 +169,7 @@ for (my $paragraph_id=0; $paragraph_id<$num_paragraphs; $paragraph_id++) {
 		    $sentence =~ s/$end_punctuation$//;
 		}
 
-		while ($sentence =~ /\*[\*]+\*/) {
+		while ($sentence =~ /\*[^\*]+\*/) {
 		    $sentence =~ s/\*/\<em\>/;
 		    $sentence =~ s/\*/\<\/em\>/;
 		}
