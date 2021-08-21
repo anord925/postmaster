@@ -55,7 +55,13 @@ my $RipFile = OpenInputFile($ARGV[0]);
 my $title = <$RipFile>;
 $title =~ s/^\s+//;
 $title =~ s/\s+$//;
-	
+
+# Handle any asterisks in the title stupidly
+while ($title =~ /\*[^\*]+\*/) {
+    $title =~ s/\*/\<em\>/;
+    $title =~ s/\*/\<\/em\>/;
+}
+
 my $category = lc(<$RipFile>);
 $category =~ s/\s//g;
 if ($category ne 'research' && $category ne 'play') {
@@ -288,6 +294,10 @@ for (my $paragraph_id=0; $paragraph_id<$num_paragraphs; $paragraph_id++) {
 	
     }
 
+    # Now that we're past the regex-ing for this paragraph, we'll need to
+    # go from \( back to (
+    $paragraph =~ s/\\\(/\(/g;
+    $paragraph =~ s/\\\)/\)/g;
     $Paragraphs[$paragraph_id] = $paragraph;
 
 }
