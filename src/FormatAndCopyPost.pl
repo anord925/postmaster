@@ -109,6 +109,11 @@ for (my $paragraph_id=0; $paragraph_id<$num_paragraphs; $paragraph_id++) {
 
     my $paragraph = $Paragraphs[$paragraph_id];
 
+    # We'll end up with weird formatting if the periods in e.g. and
+    # i.e. are treated as sentence breaks, so we'll need to fix 'em
+    $paragraph =~ s/i\.e\./ie/g;
+    $paragraph =~ s/e\.g\./eg/g;
+
     if ($paragraph !~ /^\</ || $paragraph =~ /^\<a/) {
 
 	# Break it into sentences and look for paired asterisks.
@@ -305,6 +310,12 @@ for (my $paragraph_id=0; $paragraph_id<$num_paragraphs; $paragraph_id++) {
     # go from \( back to (
     $paragraph =~ s/\\\(/\(/g;
     $paragraph =~ s/\\\)/\)/g;
+
+    # ... and also add periods to ie and eg
+    $paragraph =~ s/\<em\>ie\<\/em\>/\<em\>i.e.\<\/em\>/;
+    $paragraph =~ s/\<em\>eg\<\/em\>/\<em\>e.g.\<\/em\>/;
+
+    # PARAGRAPH COMPLETE!
     $Paragraphs[$paragraph_id] = $paragraph;
 
 }
