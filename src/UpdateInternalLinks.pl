@@ -50,7 +50,7 @@ my $num_recent = 0;
 while (my $line = <$pbd>) {
     $line =~ s/\n|\r//g;
     $line =~ s/\n|\r//g;
-    if ($line =~ /^(\S+)\s+\<([^\>]+)\>/) {
+    if ($line =~ /^(\S+)\s+\{([^\}]+)\}/) {
 
 	push(@Posts,$line);
 
@@ -162,7 +162,7 @@ sub WriteCatalog
 
 	# Our post consists of three parts: the filename, the title,
 	# and the first picture in the file (if there is one), like:
-	$post =~ /^(\S+)\s+\<([^\>]+)\>\s+(\S+)/;
+	$post =~ /^(\S+)\s+\{([^\}]+)\}\s+(\S+)/;
 	my $post_fname = $1;
 	my $post_title = $2;
 	my $post_pic   = $3;

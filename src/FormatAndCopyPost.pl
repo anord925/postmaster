@@ -391,7 +391,7 @@ my $local_outfname = $1;
 my $tmp_outfname = NameOutputFile($target_dirname.'tmp.txt');
 
 my $tmp_outf = OpenOutputFile($tmp_outfname);
-print $tmp_outf "$category\/$local_outfname \<$title\> $first_img\n";
+print $tmp_outf "$category\/$local_outfname \{$title\} $first_img\n";
 
 my $pbd_fname  = $site_dirname.'posts-by-date.txt';
 if (-e ($pbd_fname)) {
