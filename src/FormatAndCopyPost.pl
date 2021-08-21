@@ -168,27 +168,31 @@ for (my $paragraph_id=0; $paragraph_id<$num_paragraphs; $paragraph_id++) {
 		    $end_punctuation = $1;
 		    $sentence =~ s/$end_punctuation$//;
 		}
+
+		while ($sentence =~ /\*[\*]+\*/) {
+		    $sentence =~ s/\*/\<em\>/;
+		    $sentence =~ s/\*/\<\/em\>/;
+		}
+
+
 		
+		# DEPRECATED EMPHASIS HANDLING
+		#
+		if (0) {
 		# ASTERISK ALERT! ASTERISK ALERT!
 		my @Fragments = split(/\*/,$sentence);
 		my $num_fragments = scalar(@Fragments);
-
-
 		# If there's only one asterisk, this was a false-flag operation!
 		if ($sentence =~ /^\*/ && $sentence =~ /\*$/) {
-		    
 		    $sentence =~ s/\*//g;
 		    $sentence = '<em>'.$sentence.'</em>';
-		    
 		} else {
-
 		    my $emp_sentence = '';
 		    my $is_emp = 0;
 		    if ($sentence =~ /^\*/) {
 			$emp_sentence = '<em>';
 			$is_emp = 1;
 		    }
-
 		    my $fragment_id = 0;
 		    while ($fragment_id < $num_fragments) {
 			if ($is_emp) {
@@ -205,11 +209,14 @@ for (my $paragraph_id=0; $paragraph_id<$num_paragraphs; $paragraph_id++) {
 			}
 			$fragment_id++;
 		    }
-
 		    $sentence = $emp_sentence;
-		    
 		}
+		}
+		#
+		# END OF DEPRECATED EMPHASIS HANDLING
 
+
+		
 		# Don't forget your punctuation!
 		$sentence = $sentence.$end_punctuation;
 
