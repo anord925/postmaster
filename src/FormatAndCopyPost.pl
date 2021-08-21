@@ -150,11 +150,15 @@ for (my $paragraph_id=0; $paragraph_id<$num_paragraphs; $paragraph_id++) {
 	    $sentence =~ s/^\s+//;
 	    $sentence =~ s/\s+$//;
 
+	    # To avoid throwing off regexes, we need to literal-ify parens
+	    $sentence =~ s/\(/\\\(/g;
+	    $sentence =~ s/\)/\\\)/g;
+
 	    if ($sentence =~ /\*/) {
 
 		# Identify and remove terminal punctuation
 		my $end_punctuation = '';
-		if ($sentence =~ /([^\*A-Za-z]+)$/) {
+		if ($sentence =~ /([^\*A-Za-z\(\)\\]+)$/) {
 		    $end_punctuation = $1;
 		    $sentence =~ s/$end_punctuation$//;
 		}

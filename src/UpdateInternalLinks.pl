@@ -308,8 +308,9 @@ sub TraverseSite
 	$nb = $nb.$next_entry."\n";
     }
     $nb = $nb.'</ul>'."\n";
+    $nb = $nb.'<li class="navTopic"><a href="'.$play_path.'index.html">Extracurriculars</a></li>'."\n";
     $nb = $nb.'<li class="navTopic"><a href="'.$home_path.'publications.html">Publications</a></li>'."\n";
-    $nb = $nb.'<li class="navTopic"><a href="'.$play_path.'index.html">Other Stuff</a></li>'."\n";
+    $nb = $nb.'<li class="navTopic"><a href="'.$home_path.'contact.html">Contact</a></li>'."\n";
     $nb = $nb.'<li class="navTopic"><a href="'.$home_path.'about.html">About</a></li>'."\n";
     $nb = $nb.'</ul>'."\n";
     $nb = $nb.'</div>'."\n";
